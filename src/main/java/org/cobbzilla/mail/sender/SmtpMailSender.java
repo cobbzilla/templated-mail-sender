@@ -164,7 +164,7 @@ public class SmtpMailSender implements MailSender {
 
     protected void sendEmail_internal(Email email) throws EmailException {
         long wait = 5000;
-        for (int tries=0; tries < MAX_TRIES; tries++) {
+        for (int tries=1; tries <= MAX_TRIES; tries++) {
             try {
                 email.send();
                 return;
