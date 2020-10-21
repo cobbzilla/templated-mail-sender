@@ -25,8 +25,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static org.cobbzilla.util.daemon.ZillaRuntime.empty;
-import static org.cobbzilla.util.daemon.ZillaRuntime.notSupported;
+import static org.cobbzilla.util.daemon.ZillaRuntime.*;
 import static org.cobbzilla.util.string.StringUtil.removeWhitespace;
 import static org.cobbzilla.util.system.Sleep.sleep;
 
@@ -171,12 +170,12 @@ public class SmtpMailSender implements MailSender {
 
             } catch (EmailException e) {
                 if (tries < MAX_TRIES) {
-                    log.warn("Error sending email (try #"+(tries+1)+", will retry): " + e);
+                    log.warn("Error sending email (try #"+(tries+1)+", will retry): " + shortError(e));
                     sleep(wait, "waiting to send sending email (try #" + (tries + 1) + ", abandoning)");
                     wait *= 2;
 
                 } else {
-                    log.warn("Error sending email (try #"+tries+", abandoning): " + e);
+                    log.warn("Error sending email (try #"+tries+", abandoning): " + shortError(e));
                     throw e;
                 }
             }
@@ -197,7 +196,7 @@ public class SmtpMailSender implements MailSender {
             try {
                 email.attach(new ByteArrayDataSource(attachmentData, contentType), icsName, "", EmailAttachment.ATTACHMENT);
             } catch (IOException e) {
-                throw new EmailException("constructEmail: couldn't attach: "+e, e);
+                throw new EmailException("constructEmail: couldn't attach: "+shortError(e), e);
             }
 
         } else if (message.getHasHtmlMessage()) {
@@ -239,7 +238,7 @@ public class SmtpMailSender implements MailSender {
                     }
                     email.attach(ds, attachment.getName(), attachment.getDescription());
                 } catch (IOException e) {
-                    throw new EmailException("Error decoding attachment: "+attachment.getName()+": "+e, e);
+                    throw new EmailException("Error decoding attachment: "+attachment.getName()+": "+shortError(e), e);
                 }
 
             }
