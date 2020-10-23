@@ -34,6 +34,7 @@ public class SimpleEmailMessage {
     @Getter @Setter private String message;
     @Getter @Setter private String htmlMessage;
     @JsonIgnore public boolean getHasHtmlMessage() { return htmlMessage != null && htmlMessage.length() > 0; }
+    public boolean hasHtmlMessage () { return getHasHtmlMessage(); }
 
     @JsonIgnore public String getTextContent () { return getMessage(); }
     @JsonIgnore public String getHtmlContent () { return getHtmlMessage(); }

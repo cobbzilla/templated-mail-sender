@@ -25,6 +25,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static org.apache.commons.lang3.exception.ExceptionUtils.getStackTrace;
 import static org.cobbzilla.util.daemon.ZillaRuntime.*;
 import static org.cobbzilla.util.string.StringUtil.removeWhitespace;
 import static org.cobbzilla.util.system.Sleep.sleep;
@@ -170,12 +171,12 @@ public class SmtpMailSender implements MailSender {
 
             } catch (EmailException e) {
                 if (tries < MAX_TRIES) {
-                    log.warn("Error sending email (try #"+(tries+1)+", will retry): " + shortError(e));
+                    log.warn("Error sending email (try #"+(tries+1)+", will retry): " + shortError(e) + (e.getCause() != null ? "\nCaused By: "+shortError(e.getCause())+"\n"+getStackTrace(e.getCause()) : ""));
                     sleep(wait, "waiting to send sending email (try #" + (tries + 1) + ", abandoning)");
                     wait *= 2;
 
                 } else {
-                    log.warn("Error sending email (try #"+tries+", abandoning): " + shortError(e));
+                    log.warn("Error sending email (try #"+tries+", abandoning): " + shortError(e) + (e.getCause() != null ? "\nCaused By: "+shortError(e.getCause())+"\n"+getStackTrace(e.getCause()) : ""));
                     throw e;
                 }
             }
