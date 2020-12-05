@@ -3,7 +3,7 @@ package org.cobbzilla.mail.service;
 import com.github.jknack.handlebars.Handlebars;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.buffer.CircularFifoBuffer;
+import org.apache.commons.collections4.queue.CircularFifoQueue;
 import org.cobbzilla.mail.*;
 import org.cobbzilla.mail.sender.SmtpMailConfig;
 import org.cobbzilla.mail.sender.SmtpMailSender;
@@ -71,7 +71,7 @@ public class TemplatedMailService implements MailErrorHandler {
         getMailSender().deliverMessage(mail, successHandler, this);
     }
 
-    private final CircularFifoBuffer cache = new CircularFifoBuffer(100);
+    private final CircularFifoQueue cache = new CircularFifoQueue(100);
     private boolean checkDuplicate(TemplatedMail mail) {
         synchronized (cache) {
             if (cache.contains(mail)) {
